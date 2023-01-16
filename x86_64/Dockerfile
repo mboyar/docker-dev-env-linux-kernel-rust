@@ -20,9 +20,10 @@ RUN set -eux; \
     && rustup component add clippy;
 
 COPY x86_64_rust_defconfig /root/linux-6.1.4/arch/x86/configs/x86_64_rust_defconfig
+COPY make-x86_64.sh /root/
 
-RUN cd /root/linux-6.1.4 \
-    && make CC=clang x86_64_rust_defconfig \
-    && make CC=clang CLIPPY=1 -j$(nproc)
+RUN cd /root \
+    && ./make-x86_64.sh config \
+    && ./make-x86_64.sh build
 
 ENTRYPOINT [ "/usr/bin/tail", "-f", "/dev/null" ]
