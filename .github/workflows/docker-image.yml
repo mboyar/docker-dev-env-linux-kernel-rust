@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file x86-64/Dockerfile-slim --tag my-image-name:$(date +%s)
+      run: docker build . --file x86_64/Dockerfile-slim --tag mboyar/dev-env-linux-kernel-rust:$(date +%s)
