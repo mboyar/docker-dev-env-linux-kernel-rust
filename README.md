@@ -1,4 +1,5 @@
-![example workflow](https://github.com/mboyar/docker-dev-env-linux-kernel-rust/actions/workflows/docker-image.yml/badge.svg)
+![docker-image workflow](https://github.com/mboyar/docker-dev-env-linux-kernel-rust/actions/workflows/docker-image.yml/badge.svg)
+![anchore-syft workflow](https://github.com/mboyar/docker-dev-env-linux-kernel-rust/actions/workflows/anchore-syft.yml/badge.svg)
 
 # About this Repo
 This repo contains a dockerfile (from the official image for [rust](https://registry.hub.docker.com/_/rust/)) and related files to build and develop Linux kernel with Rust support easily. See [the Docker Hub page](https://hub.docker.com/r/mboyar/dev-env-linux-kernel-rust/) of this image for the full readme on how to use this Docker image.
