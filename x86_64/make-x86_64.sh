@@ -1,27 +1,33 @@
 #!/bin/bash
 
-KERNEL_PATH="/root/linux-6.1.4"
+LINUX_PATH="/root/linux"
+BUILDROOT_PATH="/root/buildroot"
 ARG1=$1
 
-if [[ -d $KERNEL_PATH ]]; then
+if [[ -d $LINUX_PATH && -d $BUILDROOT_PATH ]]; then
     
-    cd $KERNEL_PATH
-
     case "$ARG1" in
-        config)
-            make CC=clang x86_64_rust_defconfig
+        linux_defconfig)
+            cd $LINUX_PATH && make CC=clang x86_64_rust_defconfig
             ;;
-        build)
-            make CC=clang CLIPPY=1 -j$(nproc)
+        linux_build)
+            cd $LINUX_PATH && make CC=clang CLIPPY=1 -j$(nproc) \
+            && make INSTALL_MOD_PATH=../modinstall modules_install
             ;;
-        run)
-            qemu-system-x86_64 -kernel arch/x86/boot/bzImage -hda /dev/zero \
-            -append "root=/dev/zero console=ttyS0" -serial stdio -display none
+        buildroot_defconfig)
+            cd $BUILDROOT_PATH && make qemu_x86_64_nolinux_defconfig
+            ;;
+        buildroot_build)
+            cd $BUILDROOT_PATH && make -j$(nproc)
+            ;;
+        qemu-run)
+            cd $KERNEL_PATH && qemu-system-x86_64 -kernel linux/arch/x86/boot/bzImage -boot c -m 2049M -hda buildroot/output/images/rootfs.ext2 \
+            -append "root=/dev/sda rw console=ttyS0,115200 acpi=off nokaslr" -serial stdio -display none
             ;;
         *)
-            echo "Usage: ${0##*/} <config|build|run>"; exit 253
+            echo "Usage: ${0##*/} <linux_defconfig|linux_build|buildroot_defconfig|buildroot_build|qemu-run>"; exit 253
             ;;
     esac
 else
-    echo "$KERNEL_PATH could not be found!"; exit 254
+    echo "$LINUX_PATH or $BUILDROOT_PATH could not be found!"; exit 254
 fi
